@@ -62,37 +62,38 @@ int main(int argc, char * argv[])
          myArgv[ currentTokenIndex ] = strtok(NULL, " ");
       }
 
-      myArgv[currentTokenIndex + 1] = "\0"; // Null Term Arg Array
+      myArgv[currentTokenIndex + 1] = NULL; // Null Term Arg Array
 
       //printf("Number of Tokens: %d \n ", currentTokenIndex);
 
       if (!validOp(myArgv[0])){
-         printf("osShell >$Invalid Operation1");
-         continue;
-      }
-
-      // Now do something with an array like exec
-      if (indirectionOp != '\0') {
-         if (indirectionOp == '|' && !validOp(myArgv[indirectionOpIndx + 1])) {
-            printf("osShell >$Invalid Operation2");
-            continue; 			
-         }
-         if (indirectionOp == '|'){
-            errCode = runCommandWithPipe(myArgv[0], 
-               indirectionOpIndx -1, myArgv + 1, myArgv[indirectionOpIndx + 1],
-                currentTokenIndex - indirectionOpIndx, myArgv + indirectionOpIndx + 1);
-         }
-         else if (indirectionOp  == '>'){
-            errCode = runCommandWithOutputRedirect(myArgv[0], 
-               indirectionOpIndx - 1, myArgv + 1, myArgv[indirectionOpIndx + 1]);
-         }
+         fputs("osShell >$Invalid Operation\n", stderr);
       }
       else{
-         if (strncmp(myArgv[0], "cd", 3) == 0){
-            errCode = cd(myArgv[1]);
+
+         // Now do something with an array like exec
+         if (indirectionOp != '\0') {
+            if (indirectionOp == '|' && !validOp(myArgv[indirectionOpIndx + 1])) {
+               printf("osShell >$Invalid Operation");
+               continue; 			
+            }
+            if (indirectionOp == '|'){
+               errCode = runCommandWithPipe(myArgv[0], 
+                  indirectionOpIndx -1, myArgv + 1, myArgv[indirectionOpIndx + 1],
+                   currentTokenIndex - indirectionOpIndx, myArgv + indirectionOpIndx + 2);
+            }
+            else if (indirectionOp  == '>'){
+               errCode = runCommandWithOutputRedirect(myArgv[0], 
+                  indirectionOpIndx - 1, myArgv + 1, myArgv[indirectionOpIndx + 1]);
+            }
          }
          else{
-            errCode = runCommand(myArgv[0], currentTokenIndex - 1,  myArgv + 1);
+            if (strncmp(myArgv[0], "cd", 3) == 0){
+               errCode = cd(myArgv[1]);
+            }
+            else{
+               errCode = runCommand(myArgv[0], currentTokenIndex - 1,  myArgv + 1);
+            }
          }
       }
 

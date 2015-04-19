@@ -6,10 +6,13 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <errno.h>
 #include <string.h>
+#include <features.h>
 
 #define LIM 100
+#define _GNU_SOURCE
 
 /******************************************************************************
  * FUNCTION PROTOTYPES
@@ -119,12 +122,19 @@ int exec(char* cmd, char** argv) {
 
 int cat(char** args) {
     // write to new file
-    if (strcmp(args[0], ">") == 0) {
+    if ( args[0] == NULL || strcmp(args[0], ">") == 0) {
+        char* data = NULL;
+        int length;
+
         while (1) {
-            char* data = malloc(sizeof(512));
-            scanf("%s", data);
-            printf("%s ", data);
+            getline(&data, &length, stdin);
+            if (strncmp(data, "^D", 2) == 0){
+                break;
+            }
+            printf("%s\n", data);
         }
+
+        free(data);
     // read from file already created
     } else {
         int fd = open(args[0], O_RDONLY);
@@ -282,6 +292,7 @@ int runCommandWithPipe(char* op1, int argc1, char* argv1[], char* op2, int argc2
             }
 
             executeOp(op1, argc2, argv2);
+            printf("^D\n");
             waitForChild(pid2);
             exit(1);
         }

@@ -42,8 +42,10 @@ int pwd() {
         printf("%s\n", cwd);
     } else {
         printf("%s\n", "ERROR: Could not get current directory.");
+        free(cwd);
         return -1;
     }
+    free(cwd);
     return 1;
 }
 
@@ -52,8 +54,10 @@ int cd(char* path) {
     // try to change the directory
     if (chdir(path)) {
         printf("%s\n", "ERROR: Could not change directory");
+        free(path);
         return -1;
     }
+    free(path);
     return 1;
 }
 
@@ -75,6 +79,7 @@ int ls(char* path) {
         closedir(dir_path);
     }
 
+    free(path);
     return 0;
 }
 
@@ -163,13 +168,14 @@ int exec(char* cmd, char** argv) {
 int cat(char** args) {
     // write to new file
     if ( args[0] == NULL || strcmp(args[0], ">") == 0) {
-        char data[512];
+        char* data = NULL;
 
         while (fgets(data, 511, stdin) != NULL) {
             if (strncmp(data, "^D", 2) == 0){
                 break;
             }
             printf("%s", data);
+            free(data);
         }
 
     // read from file already created
@@ -183,9 +189,9 @@ int cat(char** args) {
         while (read(fd, buffer, 512) > 0) {
             printf("%s", buffer);
         }
+        free(buffer);
     }
 
-    printf("\n");
     return 0;
 }
 
@@ -385,6 +391,7 @@ int waitForChild(pid_t pid){
     if (getcwd(cwd, LIM) != NULL) {
         return cwd;
     } else {
+        free(cwd);
         return NULL;
     }
 }
@@ -400,11 +407,10 @@ void _abs_path(char** path) {
         }
         // preprend the the abs path to the realative path
         strcat(tmp, "/");
-        if ((*path) == NULL) {
-            (*path) = malloc(strlen(tmp) + 1);
-        } else {
+        if ((*path) != NULL) {
             strcat(tmp, (*path));
-        }
+        } 
+        
         (*path) = tmp;
     }
 }

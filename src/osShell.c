@@ -19,7 +19,7 @@ int main(int argc, char * argv[])
    char * heapBuffer = NULL;
 
    char indirectionOp;
-   int indirectionOpIndx, errCode;
+   int indirectionOpIndx;
 
    // readline  will  read a line from the terminal and return it, using prompt as a prompt.  If prompt is NULL or the empty string, no
    // prompt is issued.  The line returned is allocated with malloc(3); the caller must free it when finished.  The line  returned  has
@@ -78,21 +78,21 @@ int main(int argc, char * argv[])
                continue; 			
             }
             if (indirectionOp == '|'){
-               errCode = runCommandWithPipe(myArgv[0], 
+               runCommandWithPipe(myArgv[0], 
                   indirectionOpIndx -1, myArgv + 1, myArgv[indirectionOpIndx + 1],
                    currentTokenIndex - indirectionOpIndx, myArgv + indirectionOpIndx + 2);
             }
             else if (indirectionOp  == '>'){
-               errCode = runCommandWithOutputRedirect(myArgv[0], 
+               runCommandWithOutputRedirect(myArgv[0], 
                   indirectionOpIndx - 1, myArgv + 1, myArgv[indirectionOpIndx + 1]);
             }
          }
          else{
             if (strncmp(myArgv[0], "cd", 3) == 0){
-               errCode = cd(myArgv[1]);
+               cd(myArgv[1]);
             }
             else{
-               errCode = runCommand(myArgv[0], currentTokenIndex - 1,  myArgv + 1);
+               runCommand(myArgv[0], currentTokenIndex - 1,  myArgv + 1);
             }
          }
       }

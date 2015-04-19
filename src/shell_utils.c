@@ -79,25 +79,65 @@ int ls(char* path) {
 }
 
 int grep(char* searchString, char* fileName){
+    //printf("%s\n%s\n", searchString, fileName);
+    int fd;
     if (searchString == NULL){
         printf("%s\n", "invalid arguments");
         return -1;
     }
     else if (fileName != NULL){
-        //open file and dup it into stdin so 
+        //open file and dup it into stdin
+        fd = open(fileName, O_RDONLY);
+        if (fd < 0){
+            printf("%s\n", "error opening file");
+            return -1;
+        }
+
+        if (dup2(fd, STDIN_FILENO) == -1){
+            printf("%s\n", "error duplicating file descriptor");
+            return -1;
+        }
+        close(fd);
     }
 
     char buffer[500];
-    int fd = open(fileName, O_RDONLY, 0);
-    if (fd < 0){
-        printf("%s\n", "error opening file");
+    char bufferCopy[500];
+    char* tokens[100];
+    int currentTokenIndx = 0, i;
+
+    while (fgets(buffer, 499, stdin) != NULL){
+        if (strncmp(buffer, "^D", 2) == 0){
+            break;
+        }
+
+        //strtok will modify buffer, so make a copy in case it needs to be printed
+        memcpy(bufferCopy, buffer, 500);
+        //tokenize
+        tokens[currentTokenIndx] = strtok(buffer, " ");
+
+        while( tokens[ currentTokenIndx ] != NULL && currentTokenIndx < 98) 
+        {
+            //printf( "%d] %s\n", currentTokenIndx, tokens[ currentTokenIndx ] );
+            currentTokenIndx ++;
+            tokens[ currentTokenIndx ] = strtok(NULL, " ");
+        }
+
+        for (i = 0; i < currentTokenIndx; i++){
+            if (strncmp(searchString, tokens[i], strlen(searchString)) == 0){
+                //remove trailing newline character
+                bufferCopy[strlen(bufferCopy)] = '\0';
+                puts(bufferCopy);
+                continue;
+            }
+        }
+
+        currentTokenIndx = 0;
     }
 
-    while (read(fd, buffer, 500) > 0){
-        //tokenize(buffer);
-    }
-
+    return 0;
 }
+
+
 
 int exec(char* cmd, char** argv) {
     //check that the possible executable exists
@@ -123,18 +163,15 @@ int exec(char* cmd, char** argv) {
 int cat(char** args) {
     // write to new file
     if ( args[0] == NULL || strcmp(args[0], ">") == 0) {
-        char* data = NULL;
-        int length;
+        char data[512];
 
-        while (1) {
-            getline(&data, &length, stdin);
+        while (fgets(data, 511, stdin) != NULL) {
             if (strncmp(data, "^D", 2) == 0){
                 break;
             }
-            printf("%s\n", data);
+            printf("%s", data);
         }
 
-        free(data);
     // read from file already created
     } else {
         int fd = open(args[0], O_RDONLY);
@@ -147,6 +184,8 @@ int cat(char** args) {
             printf("%s", buffer);
         }
     }
+
+    printf("\n");
     return 0;
 }
 
@@ -167,6 +206,9 @@ int validOp(char* op){
         return 1;
     } 
     else if (strcmp(op, "cat") == 0) {
+        return 1;
+    }
+    else if (strcmp(op, "grep") == 0){
         return 1;
     }
     return 0;
@@ -191,6 +233,18 @@ int executeOp(char* op, int argc, char* argv[]){
         exec(argv[0], argv + 1);
     } else if (strcmp(op, "cat") == 0) {
         cat(&argv[0]);
+    }
+    else if (strcmp(op, "grep") == 0){
+        if (argc < 1){
+            printf("%s\n", "No search string specified");
+            return -1;
+        }
+        else if (argc == 1){
+            grep(argv[0], NULL);
+        }
+        else{
+            grep(argv[0], argv[1]);
+        }
     }
     return 0;
 }
@@ -291,7 +345,7 @@ int runCommandWithPipe(char* op1, int argc1, char* argv1[], char* op2, int argc2
                 printf("%s\n", "dup failure");  
             }
 
-            executeOp(op1, argc2, argv2);
+            executeOp(op1, argc1, argv1);
             printf("^D\n");
             waitForChild(pid2);
             exit(1);

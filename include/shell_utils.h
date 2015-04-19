@@ -33,6 +33,12 @@ int ls();
   *
   * @return
   */
+char** tokenize(char* buf);
+
+ /**
+  *
+  * @return
+  */
 
 int exec(char* cmd, char** argv);
 

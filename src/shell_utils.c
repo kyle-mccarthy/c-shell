@@ -1,6 +1,8 @@
 #include "../include/shell_utils.h"
 #include <dirent.h>
+#include <fcntl.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -62,9 +64,12 @@ int exec() {
     return 0;
 }
 
+int validOp(char* op){
+    return 1;
+}
+
 int executeOp(char* op, int argc, char* argv[]){
     //op already validated  
-    int rc;
 
     if (strcmp(op, "pwd") == 0){
         return pwd();
@@ -78,6 +83,8 @@ int executeOp(char* op, int argc, char* argv[]){
     else{
         //executable
     }
+
+    return 0;
 }
 
 int runCommand(char* op, int argc, char* argv[]){
@@ -120,7 +127,7 @@ int runCommandWithOutputRedirect(char* op, int argc, char* argv[], char* fileNam
         //child
 
         //replace stdout with output file descriptor
-        if (dup2(outFd, stdin)){
+        if (dup2(outFd, 1)){
             return -1;
         }
 
@@ -133,9 +140,10 @@ int runCommandWithOutputRedirect(char* op, int argc, char* argv[], char* fileNam
     }
 
     waitForChild(pid);
+    return 1;
 }
 
-int runCommandsWithPipe(char* op1, int argc1, char* argv1[], char* op2, int argc2, char* argv2[]){
+int runCommandWithPipe(char* op1, int argc1, char* argv1[], char* op2, int argc2, char* argv2[]){
     //both ops already validated
 
     int fds[2];
@@ -162,7 +170,7 @@ int runCommandsWithPipe(char* op1, int argc1, char* argv1[], char* op2, int argc
         }
 
         if (pid2 == 0){
-            if (dup2(fds[0], stdin) == -1){
+            if (dup2(fds[0], 0) == -1){
                 printf("%s\n", "dup failure");  
             }
 
@@ -170,7 +178,7 @@ int runCommandsWithPipe(char* op1, int argc1, char* argv1[], char* op2, int argc
             exit(1);
         }
         else{
-            if (dup2(fds[1], stdout) == -1){
+            if (dup2(fds[1], 1) == -1){
                 printf("%s\n", "dup failure");  
             }
 

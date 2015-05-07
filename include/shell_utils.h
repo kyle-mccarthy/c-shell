@@ -1,6 +1,7 @@
 #ifndef _SHELL_UTILS_H_
 #define _SHELL_UTILS_H_
 
+#include <sys/types.h>
 /**
  *
  * @return 
@@ -46,7 +47,7 @@ int exec();
  *
  @return
  */
- int runCommandsWithPipe(char* op1, int argc1, char* argv1[], char* op2, int argc2, char* argv2[]);
+ int runCommandWithPipe(char* op1, int argc1, char* argv1[], char* op2, int argc2, char* argv2[]);
 
 /**
  *  executeOp
@@ -61,4 +62,11 @@ int exec();
  @return
  */
 int waitForChild(pid_t pid);
+
+ /**
+ *  
+ *
+ @return
+ */
+ int validOp(char* op);
 #endif

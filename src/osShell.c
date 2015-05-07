@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <sys/types.h>
 
 int main(int argc, char * argv[])
 {
@@ -44,7 +45,7 @@ int main(int argc, char * argv[])
 	while( myArgv[ currentTokenIndex ] != NULL && currentTokenIndex < 98) 
 	{
 
-		printf( "%d] %s\n", currentTokenIndex, myArgv[ currentTokenIndex ] );
+		//printf( "%d] %s\n", currentTokenIndex, myArgv[ currentTokenIndex ] );
 
 		//determine if one of the indirection operators is used 
 		if (strncmp(myArgv[currentTokenIndex], "|", 2) == 0){
@@ -64,7 +65,7 @@ int main(int argc, char * argv[])
 
 	myArgv[currentTokenIndex + 1] = "\0"; // Null Term Arg Array
 
-   	printf("Number of Tokens: %d \n ", currentTokenIndex);
+   	//printf("Number of Tokens: %d \n ", currentTokenIndex);
 
    	if (!validOp(myArgv[0])){
    		printf("osShell >$Invalid Operation");
@@ -87,7 +88,7 @@ int main(int argc, char * argv[])
    		}
    	}
    	else{
-   		if (srtncmp(myArgv[0], "cd", 3) == 0){
+   		if (strncmp(myArgv[0], "cd", 3) == 0){
    			errCode = cd(myArgv + 1);
    		}
    		else{

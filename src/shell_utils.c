@@ -38,7 +38,7 @@ int pwd() {
     if ((cwd = _pwd()) != NULL) {
         printf("%s\n", cwd);
     } else {
-        printf("%s\n", "ERROR: Could not get current directory");
+        printf("%s\n", "ERROR: Could not get current directory.");
         return -1;
     }
     return 1;
@@ -48,7 +48,7 @@ int cd(char* path) {
     _abs_path(&path);
     // try to change the directory
     if (chdir(path)) {
-        printf("%s %s\n", "ERROR: Could not change directory to", path);
+        printf("%s\n", "ERROR: Could not change directory");
         return -1;
     }
     return 1;
@@ -57,12 +57,6 @@ int cd(char* path) {
 int ls(char* path) {
     // get the full path
     _abs_path(&path);
-
-    if (path == NULL) {
-        printf("%s\n", "ERROR: Could not list directory");
-        return -1;
-    }
-    
     // directory entries
     DIR* dir_path;
     struct dirent* dir_ent;
@@ -74,12 +68,9 @@ int ls(char* path) {
             printf("%s\n", dir_ent->d_name);
         }
         closedir(dir_path);
-    } else {
-        perror(strerror(errno));
-        printf("%s\n", "ERROR: Could not list directory");
     }
 
-    return 1;
+    return 0;
 }
 
 int exec() {
@@ -153,7 +144,7 @@ int runCommandWithOutputRedirect(char* op, int argc, char* argv[], char* fileNam
         //child
 
         //replace stdout with output file descriptor
-        if (dup2(outFd, 1)){
+        if (dup2(outFd, STDOUT_FILENO) == -1){
             exit(-1);
         }
 
@@ -197,7 +188,8 @@ int runCommandWithPipe(char* op1, int argc1, char* argv1[], char* op2, int argc2
         }
 
         if (pid2 == 0){
-            if (dup2(fds[0], 0) == -1){
+            //replace stdin with reading end of pipe
+            if (dup2(fds[0], STDIN_FILENO) == -1){
                 printf("%s\n", "dup failure");  
             }
 
@@ -205,7 +197,8 @@ int runCommandWithPipe(char* op1, int argc1, char* argv1[], char* op2, int argc2
             exit(1);
         }
         else{
-            if (dup2(fds[1], 1) == -1){
+            //replace stdout with writing end of pipe
+            if (dup2(fds[1], STDOUT_FILENO) == -1){
                 printf("%s\n", "dup failure");  
             }
 
@@ -285,16 +278,11 @@ int waitForChild(pid_t pid){
 void _abs_path(char** path) {
     if ((*path) == NULL || (*path)[0] != '/') {
         char* tmp = _pwd();
-        if (tmp == NULL) {
-            printf("%s\n", "ERROR: Can not get absolute path");
-            return;
-        }
         strcat(tmp, "/");
         if ((*path) == NULL) {
             (*path) = malloc(strlen(tmp) + 1);
-        } else {
-            strcat(tmp, (*path));
         }
+        strcat(tmp, (*path));
         (*path) = tmp;
     }
 }

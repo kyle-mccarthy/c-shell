@@ -168,14 +168,13 @@ int exec(char* cmd, char** argv) {
 int cat(char** args) {
     // write to new file
     if ( args[0] == NULL || strcmp(args[0], ">") == 0) {
-        char* data = NULL;
+        char data[500];
 
         while (fgets(data, 511, stdin) != NULL) {
             if (strncmp(data, "^D", 2) == 0){
                 break;
             }
             printf("%s", data);
-            free(data);
         }
 
     // read from file already created

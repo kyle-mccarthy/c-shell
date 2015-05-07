@@ -129,7 +129,7 @@ int runCommandWithOutputRedirect(char* op, int argc, char* argv[], char* fileNam
     //op has already been validated
 
     //open file
-    int outFd = open(fileName, O_WRONLY | O_CREAT | O_TRUNC);
+    int outFd = open(fileName, O_WRONLY | O_CREAT | O_TRUNC | 0666);
 
     if (outFd < 0){
         return -1;

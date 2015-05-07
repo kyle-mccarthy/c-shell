@@ -144,6 +144,9 @@ int validOp(char* op){
     }
     else if (strcmp(op, "exec") == 0){
         return 1;
+    } 
+    else if (strcmp(op, "cat") == 0) {
+        return 1;
     }
     else{
         return 0; 
@@ -352,8 +355,9 @@ void _abs_path(char** path) {
         strcat(tmp, "/");
         if ((*path) == NULL) {
             (*path) = malloc(strlen(tmp) + 1);
+        } else {
+            strcat(tmp, (*path));
         }
-        strcat(tmp, (*path));
         (*path) = tmp;
     }
 }

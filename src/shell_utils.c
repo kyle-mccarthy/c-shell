@@ -129,11 +129,7 @@ int runCommandWithOutputRedirect(char* op, int argc, char* argv[], char* fileNam
     //op has already been validated
 
     //open file
-    int outFd = open(fileName, O_WRONLY | O_CREAT | O_TRUNC | 0666);
 
-    if (outFd < 0){
-        return -1;
-    }  
 
     pid_t pid = fork();
 
@@ -143,15 +139,20 @@ int runCommandWithOutputRedirect(char* op, int argc, char* argv[], char* fileNam
 
     if (pid == 0){
         //child
+        int outFd = open(fileName, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+        if (outFd < 0){
+            return -1;
+        }  
 
         //replace stdout with output file descriptor
         if (dup2(outFd, STDOUT_FILENO) == -1){
             exit(-1);
         }
 
+        close(outFd);
+
         //execute command
         executeOp(op, argc, argv);
-        close(1);
         exit(1);
     } 
     else{

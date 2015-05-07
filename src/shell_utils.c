@@ -14,14 +14,12 @@
  * FUNCTION PROTOTYPES
  ******************************************************************************/
 
-char* _pwd() {
-    char* cwd = malloc(LIM);
-    if (getcwd(cwd, LIM) != NULL) {
-        return cwd;
-    } else {
-        return NULL;
-    }
-}
+/**
+ * Try to get the path of the current working directory.  If we are able to get the path
+ * return it, otherwise return a NULL value.
+ * @return char* - path to current working directory or NULL
+ */
+char* _pwd();
 
  /******************************************************************************
  * PUBLIC FUNCTIONS
@@ -65,3 +63,12 @@ int exec() {
 /******************************************************************************
  * PRIVATE FUNCTIONS
  ******************************************************************************/
+
+ char* _pwd() {
+    char* cwd = malloc(LIM);
+    if (getcwd(cwd, LIM) != NULL) {
+        return cwd;
+    } else {
+        return NULL;
+    }
+}

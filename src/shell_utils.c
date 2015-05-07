@@ -38,7 +38,7 @@ int pwd() {
     if ((cwd = _pwd()) != NULL) {
         printf("%s\n", cwd);
     } else {
-        printf("%s\n", "ERROR: Could not get current directory.");
+        printf("%s\n", "ERROR: Could not get current directory");
         return -1;
     }
     return 1;
@@ -48,7 +48,7 @@ int cd(char* path) {
     _abs_path(&path);
     // try to change the directory
     if (chdir(path)) {
-        printf("%s\n", "ERROR: Could not change directory");
+        printf("%s %s\n", "ERROR: Could not change directory to", path);
         return -1;
     }
     return 1;

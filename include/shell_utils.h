@@ -1,6 +1,7 @@
 #ifndef _SHELL_UTILS_H_
 #define _SHELL_UTILS_H_
 
+#include <sys/types.h>
 /**
  * Get the path to the current working directory.  
  * @return int > 0 on success int < 0 on failure
@@ -28,8 +29,46 @@ int ls();
 
 int exec();
 
+/**
+ *  runCommand
+ *
+ @return
+ */
 
+ int runCommand(char*op, int argc, char* argv[]);
 
+/**
+ *  runCommandWithOutRedirect
+ *
+ @return
+ */
+ int runCommandWithOutputRedirect(char* op, int argc, char* argv[], char* fileName);
 
+/**
+ *  runCommandsWithPipe
+ *
+ @return
+ */
+ int runCommandWithPipe(char* op1, int argc1, char* argv1[], char* op2, int argc2, char* argv2[]);
 
+/**
+ *  executeOp
+ *  
+ @return
+ */
+ int executeOp(char* op, int argc, char* argv[]);
+
+ /**
+ *  
+ *
+ @return
+ */
+int waitForChild(pid_t pid);
+
+ /**
+ *  
+ *
+ @return
+ */
+ int validOp(char* op);
 #endif

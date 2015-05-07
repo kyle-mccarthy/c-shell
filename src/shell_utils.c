@@ -58,6 +58,11 @@ int ls(char* path) {
     // get the full path
     _abs_path(&path);
 
+    if (path == NULL) {
+        printf("%s\n", "ERROR: Could not list directory");
+        return -1;
+    }
+    
     // directory entries
     DIR* dir_path;
     struct dirent* dir_ent;
@@ -69,6 +74,9 @@ int ls(char* path) {
             printf("%s\n", dir_ent->d_name);
         }
         closedir(dir_path);
+    } else {
+        perror(strerror(errno));
+        printf("%s\n", "ERROR: Could not list directory");
     }
 
     return 1;
@@ -283,8 +291,9 @@ void _abs_path(char** path) {
         strcat(tmp, "/");
         if ((*path) == NULL) {
             (*path) = malloc(strlen(tmp) + 1);
+        } else {
+            strcat(tmp, (*path));
         }
-        strcat(tmp, (*path));
         (*path) = tmp;
     }
 }

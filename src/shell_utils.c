@@ -65,15 +65,17 @@ int ls(char* path) {
     dir_path = opendir(path);
     if (dir_path) {
         while ((dir_ent = readdir(dir_path)) != NULL) {
-            printf("%s\n", dir_ent->d_name);
+            printf("%-40s", dir_ent->d_name);
         }
+        printf("\n");
         closedir(dir_path);
     }
 
     return 0;
 }
 
-int exec() {
+int exec(char** cmd) {
+    execvp(cmd[0], cmd);
     return 0;
 }
 

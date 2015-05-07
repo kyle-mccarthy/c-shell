@@ -27,7 +27,7 @@ int ls();
   * @return
   */
 
-int exec();
+int exec(char** cmd);
 
 /**
  *  runCommand

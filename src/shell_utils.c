@@ -5,9 +5,17 @@
 #include <stdio.h>
 #include <errno.h>
 
+#define LIM 100
+
 int pwd() {
-    char cwd[1024];
-    return 0;
+    char cwd[LIM];
+    if (getcwd(cwd, LIM) != NULL) {
+        printf("%s\n", cwd);
+    } else {
+        printf("%s\n", "ERROR: Could not get current directory.");
+        return 0;
+    }
+    return 1;
 }
 
 int cd() {

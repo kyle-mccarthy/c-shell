@@ -90,7 +90,12 @@ int executeOp(char* op, int argc, char* argv[]){
         return cd(argv[0]);
     }
     else if (strcmp(op, "ls") == 0){
-        return ls();
+        if (argc < 2){
+            return ls(NULL);
+        }
+        else{
+            return ls(argv[0]);
+        }
     }
     else{
         //executable

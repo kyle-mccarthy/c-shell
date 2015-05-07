@@ -89,7 +89,7 @@ int main(int argc, char * argv[])
    	}
    	else{
    		if (strncmp(myArgv[0], "cd", 3) == 0){
-   			errCode = cd(myArgv + 1);
+   			errCode = cd(myArgv[1]);
    		}
    		else{
    			errCode = runCommand(myArgv[0], currentTokenIndex - 1,  myArgv + 1);

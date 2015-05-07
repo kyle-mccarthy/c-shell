@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 2.8)
 project (libSoneFiveGP)
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -std=c99 -D_XOPEN_SOURCE=500 -Wall")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -std=c99 -D_XOPEN_SOURCE=500 -Wall -l readline")
 
 include_directories(${CMAKE_CURRENT_DIRECTORY}/include)
 

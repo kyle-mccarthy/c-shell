@@ -50,7 +50,7 @@ int main(int argc, char * argv[])
 			indirectionOpIndx = currentTokenIndex;
 		}
 		else if (strncmp(myArgv[currentTokenIndex], ">", 2) == 0){
-			indirectOp = '>';
+			indirectionOp = '>';
 			indirectionOpIndx = currentTokenIndex;
 		}
 

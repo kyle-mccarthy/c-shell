@@ -145,11 +145,12 @@ int runCommandWithOutputRedirect(char* op, int argc, char* argv[], char* fileNam
 
         //replace stdout with output file descriptor
         if (dup2(outFd, 1)){
-            return -1;
+            exit(-1);
         }
 
         //execute command
         executeOp(op, argc, argv);
+        close(1);
         exit(1);
     } 
     else{

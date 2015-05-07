@@ -16,6 +16,9 @@ int main(int argc, char * argv[])
    char * cmdBuffer = NULL;
    char * heapBuffer = NULL;
 
+   char indirectionOp;
+   int indirectionOpIndx, errCode;
+
 // readline  will  read a line from the terminal and return it, using prompt as a prompt.  If prompt is NULL or the empty string, no
 // prompt is issued.  The line returned is allocated with malloc(3); the caller must free it when finished.  The line  returned  has
 // the final newline removed, so only the text of the line remains.
@@ -28,8 +31,7 @@ int main(int argc, char * argv[])
 	// Our Token Parser
    	unsigned char currentTokenIndex = 0;
    	//does stdin or stdout need to be rerouted
-   	char indirectionOp = '\0';
-   	int indirectionOpIndx;
+   	indirectionOp = '\0';
 
 	// Get some heap to copy into so it is scoped proper for passes and forks
 	heapBuffer = (char *) calloc(strlen(cmdBuffer), sizeof(char));
@@ -50,7 +52,7 @@ int main(int argc, char * argv[])
 			indirectionOpIndx = currentTokenIndex;
 		}
 		else if (strncmp(myArgv[currentTokenIndex], ">", 2) == 0){
-			indirectOp = '>';
+			indirectionOp = '>';
 			indirectionOpIndx = currentTokenIndex;
 		}
 
@@ -64,8 +66,33 @@ int main(int argc, char * argv[])
 
    	printf("Number of Tokens: %d \n ", currentTokenIndex);
 
-	// Now do something with an array like exec
+   	if (!validOp(myArgv[0])){
+   		printf("osShell >$Invalid Operation");
+   		continue;
+   	}
 
+	// Now do something with an array like exec
+   	if (indirectionOp != '\0'){
+   		if (!validOp(myArgv[indirectionOpIndx + 1])){
+     		printf("osShell >$Invalid Operation");
+   			continue; 			
+   		}
+
+   		if (strncmp(myArgv[indirectionOpIndx], "|", 2) == 0){
+   			
+   		}
+   		else if (strncmp(myArgv[indirectionOpIndx], ">", 2) == 0){
+   			errCode = executeCommand(myArgv[0], myArgv + 1, myArgv[indirectionOpIndx + 1]);
+   		}
+   	}
+   	else{
+   		if (srtncmp(myArgv[0], "cd", 3) == 0){
+   			errCode = cd(myArgv + 1);
+   		}
+   		else{
+   			errCode = executeCommand(myArgv[0], myArgv + 1);
+   		}
+   	}
 
 	free( heapBuffer );
 	free( cmdBuffer );

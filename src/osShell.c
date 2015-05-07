@@ -3,7 +3,7 @@
 
   Build:    gcc read_token_to_array.c -o osShell -lreadline   
 */
-#include "shell_utils.h"
+#include "../include/shell_utils.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -79,10 +79,11 @@ int main(int argc, char * argv[])
    		}
 
    		if (strncmp(myArgv[indirectionOpIndx], "|", 2) == 0){
-   			
+   			errCode = runCommandWithPipe(myArgv[0], indirectionOpIndx -1, myArgv + 1, myArgv[indirectionOpIndx + 1], currentTokenIndex - indirectionOpIndx, myArgv + indirectionOpIndx + 1);
+
    		}
    		else if (strncmp(myArgv[indirectionOpIndx], ">", 2) == 0){
-   			errCode = executeCommand(myArgv[0], myArgv + 1, myArgv[indirectionOpIndx + 1]);
+   			errCode = runCommandWithOutputRedirect(myArgv[0],indirectionOpIndx - 1, myArgv + 1, myArgv[indirectionOpIndx + 1]);
    		}
    	}
    	else{
@@ -90,7 +91,7 @@ int main(int argc, char * argv[])
    			errCode = cd(myArgv + 1);
    		}
    		else{
-   			errCode = executeCommand(myArgv[0], myArgv + 1);
+   			errCode = runCommand(myArgv[0], currentTokenIndex - 1,  myArgv + 1);
    		}
    	}
 

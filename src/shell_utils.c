@@ -38,7 +38,7 @@ int pwd() {
     if ((cwd = _pwd()) != NULL) {
         printf("%s\n", cwd);
     } else {
-        printf("%s\n", "ERROR: Could not get current directory.");
+        printf("%s\n", "ERROR: Could not get current directory");
         return -1;
     }
     return 1;
@@ -48,7 +48,7 @@ int cd(char* path) {
     _abs_path(&path);
     // try to change the directory
     if (chdir(path)) {
-        printf("%s\n", "ERROR: Could not change directory");
+        printf("%s %s\n", "ERROR: Could not change directory to", path);
         return -1;
     }
     return 1;
@@ -57,6 +57,12 @@ int cd(char* path) {
 int ls(char* path) {
     // get the full path
     _abs_path(&path);
+
+    if (path == NULL) {
+        printf("%s\n", "ERROR: Could not list directory");
+        return -1;
+    }
+    
     // directory entries
     DIR* dir_path;
     struct dirent* dir_ent;
@@ -68,9 +74,12 @@ int ls(char* path) {
             printf("%s\n", dir_ent->d_name);
         }
         closedir(dir_path);
+    } else {
+        perror(strerror(errno));
+        printf("%s\n", "ERROR: Could not list directory");
     }
 
-    return 0;
+    return 1;
 }
 
 int exec() {
@@ -276,11 +285,16 @@ int waitForChild(pid_t pid){
 void _abs_path(char** path) {
     if ((*path) == NULL || (*path)[0] != '/') {
         char* tmp = _pwd();
+        if (tmp == NULL) {
+            printf("%s\n", "ERROR: Can not get absolute path");
+            return;
+        }
         strcat(tmp, "/");
         if ((*path) == NULL) {
             (*path) = malloc(strlen(tmp) + 1);
+        } else {
+            strcat(tmp, (*path));
         }
-        strcat(tmp, (*path));
         (*path) = tmp;
     }
 }

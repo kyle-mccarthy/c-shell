@@ -10,5 +10,7 @@ add_library(SoneFiveGP SHARED src/shell_utils.c)
 install(TARGETS SoneFiveGP DESTINATION lib)
 install(FILES include/shell_utils.h DESTINATION include)
 
-add_executable (test_GP src/osShell.c)
+add_executable (shell_GP src/osShell.c)
+add_executable (test_GP src/test_cases.c)
 target_link_libraries (test_GP SoneFiveGP)
+target_link_libraries (shell_GP SoneFiveGP)

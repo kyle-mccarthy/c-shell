@@ -76,11 +76,11 @@ int ls(char* path) {
 
 int exec(char* cmd, char** argv) {
     //check that the possible executable exists
-    if (command == NULL || argv == NULL){
+    if (cmd == NULL || argv == NULL){
         printf("%s\n", "invalid arguments");
         return -1;
     }
-    else if (access(cmd) != F_OK){
+    else if (access(cmd, F_OK) == -1){
         printf("%s\n", "file doesn't exist");
         return -1;
     }

@@ -46,7 +46,7 @@ int main(int argc, char * argv[])
 	while( myArgv[ currentTokenIndex ] != NULL && currentTokenIndex < 98) 
 	{
 
-		//printf( "%d] %s\n", currentTokenIndex, myArgv[ currentTokenIndex ] );
+	   //printf( "%d] %s\n", currentTokenIndex, myArgv[ currentTokenIndex ] );
 
 		//determine if one of the indirection operators is used 
 		if (strncmp(myArgv[currentTokenIndex], "|", 2) == 0){
@@ -71,22 +71,21 @@ int main(int argc, char * argv[])
    	//printf("Number of Tokens: %d \n ", currentTokenIndex);
 
    	if (!validOp(myArgv[0])){
-   		printf("osShell >$Invalid Operation");
+   		printf("osShell >$Invalid Operation1");
    		continue;
    	}
 
 	// Now do something with an array like exec
    	if (indirectionOp != '\0'){
-   		if (!validOp(myArgv[indirectionOpIndx + 1])){
-     		printf("osShell >$Invalid Operation");
+   		if (indirectionOp == '|' && !validOp(myArgv[indirectionOpIndx + 1])){
+     		   printf("osShell >$Invalid Operation2");
    			continue; 			
    		}
-
-   		if (strncmp(myArgv[indirectionOpIndx], "|", 2) == 0){
+   		if (indirectionOp == '|'){
    			errCode = runCommandWithPipe(myArgv[0], indirectionOpIndx -1, myArgv + 1, myArgv[indirectionOpIndx + 1], currentTokenIndex - indirectionOpIndx, myArgv + indirectionOpIndx + 1);
 
    		}
-   		else if (strncmp(myArgv[indirectionOpIndx], ">", 2) == 0){
+   		else if (indirectionOp  == '>'){
    			errCode = runCommandWithOutputRedirect(myArgv[0],indirectionOpIndx - 1, myArgv + 1, myArgv[indirectionOpIndx + 1]);
    		}
    	}

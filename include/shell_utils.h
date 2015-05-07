@@ -16,6 +16,13 @@ int pwd();
  */ 
  int cd(char* path);
 
+ /**
+ *  
+ *
+ @return
+ */
+ int grep(char* searchString, char* fileName);
+
 /**
  *
  * @return

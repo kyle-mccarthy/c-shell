@@ -74,6 +74,27 @@ int ls(char* path) {
     return 0;
 }
 
+int grep(char* searchString, char* fileName){
+    if (searchString == NULL){
+        printf("%s\n", "invalid arguments");
+        return -1;
+    }
+    else if (fileName != NULL){
+        //open file and dup it into stdin so 
+    }
+
+    char buffer[500];
+    int fd = open(fileName, O_RDONLY, 0);
+    if (fd < 0){
+        printf("%s\n", "error opening file");
+    }
+
+    while (read(fd, buffer, 500) > 0){
+        //tokenize(buffer);
+    }
+
+}
+
 int exec(char* cmd, char** argv) {
     //check that the possible executable exists
     if (cmd == NULL || argv == NULL){
@@ -96,24 +117,14 @@ int exec(char* cmd, char** argv) {
 }
 
 int cat(char** args) {
-    // write to new file
-    if (strcmp(args[0], ">") == 0) {
-        while (1) {
-            char* data = malloc(sizeof(512));
-            scanf("%s", data);
-            printf("%s ", data);
-        }
-    // read from file already created
-    } else {
-        int fd = open(args[0], O_RDONLY);
-        if (fd < 0) {
-            printf("%s\n", "ERROR: Could not open file");
-            return -1;
-        }
-        char* buffer = malloc(512);
-        while (read(fd, buffer, 512) > 0) {
-            printf("%s", buffer);
-        }
+    int fd = open(args[0], O_RDONLY);
+    if (fd < 0) {
+        printf("%s\n", "ERROR: Could not open file");
+        return -1;
+    }
+    char* buffer = malloc(512);
+    while (read(fd, buffer, 512) > 0) {
+        printf("%s", buffer);
     }
     return 0;
 }

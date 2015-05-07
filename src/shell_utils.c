@@ -86,7 +86,7 @@ int exec(char* cmd, char** argv) {
     }
 
 
-    if (execvp(cmd, argv) == -1){
+    if (execv(cmd, argv) == -1){
         printf("%s\n", "cannot be executed");
         return -1;
     }

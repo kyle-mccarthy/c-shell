@@ -55,6 +55,7 @@ int cd(char* path) {
 int ls(char* path) {
     // get the full path
     _abs_path(&path);
+
     // directory entries
     DIR* dir_path;
     struct dirent* dir_ent;
@@ -68,7 +69,7 @@ int ls(char* path) {
         closedir(dir_path);
     }
 
-    return 0;
+    return 1;
 }
 
 int exec() {
@@ -91,6 +92,10 @@ int exec() {
 void _abs_path(char** path) {
     if ((*path) == NULL || (*path)[0] != '/') {
         char* tmp = _pwd();
+        if (tmp == NULL) {
+            printf("%s\n", "ERROR: Can not get absolute path");
+            return;
+        }
         strcat(tmp, "/");
         if ((*path) == NULL) {
             (*path) = malloc(strlen(tmp) + 1);

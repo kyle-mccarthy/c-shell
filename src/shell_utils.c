@@ -107,9 +107,8 @@ int executeOp(char* op, int argc, char* argv[]){
         else{
             return ls(argv[0]);
         }
-    }
-    else{
-        //executable
+    } else if (strcmp(op, "exec") == 0) {
+        exec(&argv[0]);
     }
 
     return 0;

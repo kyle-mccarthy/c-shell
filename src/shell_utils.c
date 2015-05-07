@@ -70,7 +70,6 @@ int validOp(char* op){
 
 int executeOp(char* op, int argc, char* argv[]){
     //op already validated  
-
     if (strcmp(op, "pwd") == 0){
         return pwd();
     }
@@ -245,3 +244,4 @@ int waitForChild(pid_t pid){
 /******************************************************************************
  * PRIVATE FUNCTIONS
  ******************************************************************************/
+

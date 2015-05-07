@@ -3,7 +3,7 @@
 
   Build:    gcc read_token_to_array.c -o osShell -lreadline   
 */
-#include "shell_utils.h"
+#include "../include/shell_utils.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

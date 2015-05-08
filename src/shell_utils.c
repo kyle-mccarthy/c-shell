@@ -57,6 +57,7 @@ int cd(char* path) {
 int ls(char* path) {
     // get the full path
     _abs_path(&path);
+    
     // directory entries
     DIR* dir_path;
     struct dirent* dir_ent;
@@ -158,9 +159,7 @@ int validOp(char* op){
     else if (strcmp(op, "cat") == 0) {
         return 1;
     }
-    else{
-        return 0; 
-    }
+    return 0;
 }
 
 int executeOp(char* op, int argc, char* argv[]){
@@ -235,10 +234,7 @@ int runCommandWithOutputRedirect(char* op, int argc, char* argv[], char* fileNam
         //execute command
         executeOp(op, argc, argv);
         exit(1);
-    } 
-    else{
-        //don't do anything 
-    }
+    } // else parent do nothing
 
     waitForChild(pid);
     return 1;
@@ -289,10 +285,7 @@ int runCommandWithPipe(char* op1, int argc1, char* argv1[], char* op2, int argc2
             waitForChild(pid2);
             exit(1);
         }
-    }
-    else{
-        //parent do nothing
-    }
+    } // else parent do nothing
 
     waitForChild(pid);
     return 0;
@@ -303,11 +296,8 @@ int waitForChild(pid_t pid){
 
     do  // in reality, mulptiple signals or exit status could come from the child
     {
-
         pid_t w = waitpid(pid, &status, WUNTRACED | WCONTINUED);
-        if (w == -1)
-        {
-           // std::cerr << "Error waiting for child process ("<< pid <<")" << std::endl;
+        if (w == -1) {
             break;
         }
         
@@ -317,8 +307,7 @@ int waitForChild(pid_t pid){
         }
     }
     while (!WIFEXITED(status) && !WIFSIGNALED(status));
-    
-    
+
     return 0;
 }
 

@@ -46,18 +46,16 @@ int main(int argc, char * argv[])
 	while( myArgv[ currentTokenIndex ] != NULL && currentTokenIndex < 98) 
 	{
 
-	   //printf( "%d] %s\n", currentTokenIndex, myArgv[ currentTokenIndex ] );
+	   printf( "%d] %s\n", currentTokenIndex, myArgv[ currentTokenIndex ] );
 
 		//determine if one of the indirection operators is used 
 		if (strncmp(myArgv[currentTokenIndex], "|", 2) == 0){
 			indirectionOp = '|';
 			indirectionOpIndx = currentTokenIndex;
-         myArgv[currentTokenIndex] = NULL;
 		}
 		else if (strncmp(myArgv[currentTokenIndex], ">", 2) == 0){
 			indirectionOp = '>';
 			indirectionOpIndx = currentTokenIndex;
-         myArgv[currentTokenIndex] = NULL;
 		}
 
 		currentTokenIndex ++;

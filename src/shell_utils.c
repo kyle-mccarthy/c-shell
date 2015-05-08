@@ -117,14 +117,24 @@ int exec(char* cmd, char** argv) {
 }
 
 int cat(char** args) {
-    int fd = open(args[0], O_RDONLY);
-    if (fd < 0) {
-        printf("%s\n", "ERROR: Could not open file");
-        return -1;
-    }
-    char* buffer = malloc(512);
-    while (read(fd, buffer, 512) > 0) {
-        printf("%s", buffer);
+    // write to new file
+    if (strcmp(args[0], ">") == 0) {
+        while (1) {
+            char* data = malloc(sizeof(512));
+            scanf("%s", data);
+            printf("%s ", data);
+        }
+    // read from file already created
+    } else {
+        int fd = open(args[0], O_RDONLY);
+        if (fd < 0) {
+            printf("%s\n", "ERROR: Could not open file");
+            return -1;
+        }
+        char* buffer = malloc(512);
+        while (read(fd, buffer, 512) > 0) {
+            printf("%s", buffer);
+        }
     }
     return 0;
 }

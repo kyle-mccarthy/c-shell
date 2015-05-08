@@ -79,6 +79,19 @@ int exec(char** cmd) {
     return 0;
 }
 
+int cat(char** args) {
+    int fd = open(args[0], O_RDONLY);
+    if (fd < 0) {
+        printf("%s\n", "ERROR: Could not open file");
+        return -1;
+    }
+    char* buffer = malloc(512);
+    while (read(fd, buffer, 512) > 0) {
+        printf("%s", buffer);
+    }
+    return 0;
+}
+
 int validOp(char* op){
     return 1;
 }
@@ -100,8 +113,9 @@ int executeOp(char* op, int argc, char* argv[]){
         }
     } else if (strcmp(op, "exec") == 0) {
         exec(&argv[0]);
+    } else if (strcmp(op, "cat") == 0) {
+        cat(&argv[0]);
     }
-
     return 0;
 }
 
@@ -264,6 +278,7 @@ int waitForChild(pid_t pid){
     
     return 0;
 }
+
 /******************************************************************************
  * PRIVATE FUNCTIONS
  ******************************************************************************/

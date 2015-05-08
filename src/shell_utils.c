@@ -311,32 +311,8 @@ int waitForChild(pid_t pid){
             break;
         }
         
-        if (WIFEXITED(status))
-        {
-            if (status > 0)
-            {
-               // std::cerr << "Child process ("<< pid <<") exited with non-zero status of " << WEXITSTATUS(status) << std::endl;
-                continue;
-            }
-            else
-            {
-               // std::cout << "Child process ("<< pid <<") exited with status of " << WEXITSTATUS(status) << std::endl;
-                continue;
-            }
-        }
-        else if (WIFSIGNALED(status))
-        {
-            //std::cout << "Child process ("<< pid <<") killed by signal (" << WTERMSIG(status) << ")" << std::endl;
-            continue;           
-        }
-        else if (WIFSTOPPED(status))
-        {
-            //std::cout << "Child process ("<< pid <<") stopped by signal (" << WSTOPSIG(status) << ")" << std::endl;
-            continue;           
-        }
-        else if (WIFCONTINUED(status))
-        {
-            //std::cout << "Child process ("<< pid <<") continued" << std::endl;
+        if (WIFEXITED(status) || WIFSIGNALED(status) || WIFSTOPPED(status) || 
+            WIFCONTINUED(status)) {
             continue;
         }
     }

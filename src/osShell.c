@@ -13,7 +13,8 @@
 
 int main(int argc, char * argv[])
 {
-   char * myArgv[100]; // Assume limit of 100 tokens
+   char * myArgv[101]; // Assume limit of 100 tokens, extra pointer on end for null terminatng argv
+   myArgv[100] = NULL;
    char * cmdBuffer = NULL;
    char * heapBuffer = NULL;
 
@@ -51,10 +52,12 @@ int main(int argc, char * argv[])
 		if (strncmp(myArgv[currentTokenIndex], "|", 2) == 0){
 			indirectionOp = '|';
 			indirectionOpIndx = currentTokenIndex;
+         myArgv[currentTokenIndex] = NULL;
 		}
 		else if (strncmp(myArgv[currentTokenIndex], ">", 2) == 0){
 			indirectionOp = '>';
 			indirectionOpIndx = currentTokenIndex;
+         myArgv[currentTokenIndex] = NULL;
 		}
 
 		currentTokenIndex ++;

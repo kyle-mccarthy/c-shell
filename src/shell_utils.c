@@ -74,9 +74,25 @@ int ls(char* path) {
     return 0;
 }
 
-int exec(char** cmd) {
-    execvp(cmd[0], cmd);
-    return 0;
+int exec(char* cmd, char** argv) {
+    //check that the possible executable exists
+    if (cmd == NULL || argv == NULL){
+        printf("%s\n", "invalid arguments");
+        return -1;
+    }
+    else if (access(cmd, F_OK) == -1){
+        printf("%s\n", "file doesn't exist");
+        return -1;
+    }
+
+
+    if (execvp(cmd, argv) == -1){
+        printf("%s\n", "cannot be executed");
+        return -1;
+    }
+    else{
+        return 0;
+    }
 }
 
 int cat(char** args) {
@@ -103,7 +119,24 @@ int cat(char** args) {
 }
 
 int validOp(char* op){
-    return 1;
+    if (op == NULL){
+        return 0;
+    }
+    else if (strcmp(op, "cd") == 0){
+        return 1;
+    }
+    else if (strcmp(op, "ls") == 0){
+        return 1;
+    }
+    else if (strcmp(op, "pwd") == 0){
+        return 1;
+    }
+    else if (strcmp(op, "exec") == 0){
+        return 1;
+    }
+    else{
+        return 0; 
+    }
 }
 
 int executeOp(char* op, int argc, char* argv[]){
@@ -122,7 +155,7 @@ int executeOp(char* op, int argc, char* argv[]){
             return ls(argv[0]);
         }
     } else if (strcmp(op, "exec") == 0) {
-        exec(&argv[0]);
+        exec(argv[0], argv + 1);
     } else if (strcmp(op, "cat") == 0) {
         cat(&argv[0]);
     }

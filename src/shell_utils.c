@@ -362,6 +362,10 @@ int waitForChild(pid_t pid){
 void _abs_path(char** path) {
     if ((*path) == NULL || (*path)[0] != '/') {
         char* tmp = _pwd();
+        if (tmp == NULL) {
+            printf("%s\n", "ERROR: NULL pwd passed to _abs_path");
+            return;
+        }
         strcat(tmp, "/");
         if ((*path) == NULL) {
             (*path) = malloc(strlen(tmp) + 1);

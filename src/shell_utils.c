@@ -360,12 +360,15 @@ int waitForChild(pid_t pid){
 }
 
 void _abs_path(char** path) {
+    // if the str is NULL or doesn't start with / then it isn't the abs path
     if ((*path) == NULL || (*path)[0] != '/') {
         char* tmp = _pwd();
+        // make sure that nothing got messed up in the _pwd call
         if (tmp == NULL) {
             printf("%s\n", "ERROR: NULL pwd passed to _abs_path");
             return;
         }
+        // preprend the the abs path to the realative path
         strcat(tmp, "/");
         if ((*path) == NULL) {
             (*path) = malloc(strlen(tmp) + 1);
